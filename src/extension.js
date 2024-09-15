@@ -83,7 +83,7 @@ function activate(context) {
             tokenCount = specialTokenCount;
         }
 
-        statusBar.text = `Token Count: ${tokenCount} (${currentModel})`;
+        statusBar.text = `Tokens: ${tokenCount} (${currentModel})`;
         statusBar.show();
     };
 
