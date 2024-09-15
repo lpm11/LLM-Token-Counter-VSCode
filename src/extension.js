@@ -21,8 +21,7 @@ function activate(context) {
             'babbage',
         ],
         'anthropic': [
-            'claude-2',
-            'claude-3 (Approximate)', // There is no exact tokenizer for claude-3
+            'anthropic',
         ]
     };
 
@@ -33,8 +32,7 @@ function activate(context) {
         'text-davinci-003': ['<|endoftext|>'],
         'davinci': ['<|endoftext|>'],
         'babbage': ['<|endoftext|>'],
-        'claude-2': [],
-        'claude-3': [] // Approximate
+        'anthropic': [], // Unified Anthropic model
     };
 
     let currentModel = modelProviders.openai[0];
