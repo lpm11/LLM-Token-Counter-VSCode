@@ -66,7 +66,35 @@
         "command": "gpt-token-counter-live.changeModel",
         "title": "Change Model"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "gptTokenCounterLive.defaultModel": {
+          "type": "string",
+          "default": "openai: gpt-4o",
+          "description": "Sets the default model for the GPT Token Counter.",
+          "enum": [
+            "openai: gpt-4o",
+            "openai: gpt-4",
+            "openai: gpt-3.5-turbo",
+            "openai: text-davinci-003",
+            "openai: davinci",
+            "openai: babbage",
+            "anthropic: anthropic"
+          ],
+          "enumDescriptions": [
+            "OpenAI: GPT-4o",
+            "OpenAI: GPT-4",
+            "OpenAI: GPT-3.5 Turbo",
+            "OpenAI: text-davinci-003",
+            "OpenAI: davinci",
+            "OpenAI: babbage",
+            "Anthropic"
+          ]
+        }
+      }
+    }
   },
   "keywords": [
     "GPT",

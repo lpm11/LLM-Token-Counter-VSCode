@@ -35,8 +35,12 @@ function activate(context) {
         'anthropic': [], // Unified Anthropic model
     };
 
-    let currentModel = modelProviders.openai[0];
-    let currentProvider = 'openai';
+    // Initialize currentModel with default from configuration
+    const config = vscode.workspace.getConfiguration('gptTokenCounterLive');
+    let defaultModel = config.get('defaultModel') || modelProviders.openai[0];
+    const [provider, model] = defaultModel.includes(':') ? defaultModel.split(': ') : ['openai', defaultModel];
+    let currentProvider = provider;
+    let currentModel = model;
 
     context.subscriptions.push(statusBar);
 
@@ -90,6 +94,27 @@ function activate(context) {
     vscode.window.onDidChangeTextEditorSelection(updateTokenCount, null, context.subscriptions);
     vscode.window.onDidChangeActiveTextEditor(updateTokenCount, null, context.subscriptions);
     vscode.workspace.onDidChangeTextDocument(updateTokenCount, null, context.subscriptions);
+
+    // Listen for configuration changes
+    vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration('gptTokenCounterLive.defaultModel')) {
+            let newDefault = config.get('defaultModel');
+            if (newDefault && newDefault !== `${currentProvider}: ${currentModel}`) {
+                const [newProvider, newModel] = newDefault.split(': ');
+                currentProvider = newProvider;
+                currentModel = newModel;
+                if (currentProvider === 'openai') {
+                    try {
+                        initializeEncoder(currentModel);
+                    } catch (error) {
+                        vscode.window.showErrorMessage(`Failed to load encoder for model ${currentModel}: ${error.message}`);
+                        return;
+                    }
+                }
+                updateTokenCount();
+            }
+        }
+    });
 
     let disposable = vscode.commands.registerCommand('gpt-token-counter-live.changeModel', async function () {
         let flatModelList = Object.entries(modelProviders).reduce((acc, [provider, models]) => acc.concat(models.map(model => `${provider}: ${model}`)), []);
